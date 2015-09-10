@@ -1,0 +1,32 @@
+﻿Build started 9/4/2015 9:05:06 AM.
+     1>Project "C:\Users\bryson.au\Documents\GitHub\opengl\openglthing\openglthing.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt Camera.cpp
+         Camera.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TC /errorReport:prompt gl_core_4_4.c
+         gl_core_4_4.c
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\bryson.au\Documents\GitHub\opengl\x64\Debug\openglthing.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\bryson.au\Documents\GitHub\opengl\x64\Debug\openglthing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\bryson.au\Documents\GitHub\opengl\x64\Debug\openglthing.lib" /MACHINE:X64 x64\Debug\Camera.obj
+         x64\Debug\Gizmos.obj
+         x64\Debug\gl_core_4_4.obj
+         x64\Debug\Source.obj
+     1>Camera.obj : error LNK2019: unresolved external symbol glfwGetKey referenced in function "public: void __cdecl FlyCam::Move(int,int,int,int,double)" (?Move@FlyCam@@QEAAXHHHHN@Z)
+     1>Source.obj : error LNK2001: unresolved external symbol glfwGetKey
+     1>Camera.obj : error LNK2019: unresolved external symbol glfwGetCurrentContext referenced in function "public: void __cdecl FlyCam::Move(int,int,int,int,double)" (?Move@FlyCam@@QEAAXHHHHN@Z)
+     1>gl_core_4_4.obj : error LNK2019: unresolved external symbol __imp_wglGetProcAddress referenced in function WinGetProcAddress
+     1>Source.obj : error LNK2019: unresolved external symbol glfwInit referenced in function main
+     1>Source.obj : error LNK2019: unresolved external symbol glfwTerminate referenced in function main
+     1>Source.obj : error LNK2019: unresolved external symbol glfwCreateWindow referenced in function main
+     1>Source.obj : error LNK2019: unresolved external symbol glfwDestroyWindow referenced in function main
+     1>Source.obj : error LNK2019: unresolved external symbol glfwWindowShouldClose referenced in function main
+     1>Source.obj : error LNK2019: unresolved external symbol glfwPollEvents referenced in function main
+     1>Source.obj : error LNK2019: unresolved external symbol glfwGetTime referenced in function "void __cdecl `dynamic initializer for 'currentTime''(void)" (??__EcurrentTime@@YAXXZ)
+     1>Source.obj : error LNK2019: unresolved external symbol glfwSetTime referenced in function "void __cdecl GetDeltaTime(void)" (?GetDeltaTime@@YAXXZ)
+     1>Source.obj : error LNK2019: unresolved external symbol glfwMakeContextCurrent referenced in function main
+     1>Source.obj : error LNK2019: unresolved external symbol glfwSwapBuffers referenced in function main
+     1>C:\Users\bryson.au\Documents\GitHub\opengl\x64\Debug\openglthing.exe : fatal error LNK1120: 13 unresolved externals
+     1>Done Building Project "C:\Users\bryson.au\Documents\GitHub\opengl\openglthing\openglthing.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:03.85
