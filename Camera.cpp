@@ -1,8 +1,5 @@
 #include "Camera.h"
-#include <glfw3.h>
-#include "glm\glm\ext.hpp"
 
-#include <iostream>
 
 // initialize statics
 double FlyCam::X_SCROLL = 0.0;
