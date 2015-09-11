@@ -5,8 +5,10 @@
 #include <math.h>
 #include <tiny_obj_loader.h>
 #define GLM_SWIZZLE
-#include "glm/glm/glm.hpp"
-#include "glm/glm/ext.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#include "glm/glm.hpp"
+#include "glm/ext.hpp"
 #include "Vertex.h"
 #include "Camera.h"
 
@@ -188,6 +190,9 @@ int main()
 		
 		RenderObject grid = MakeGrid(rows, cols);
 		createOpenGLBuffers(shapes);
+
+
+
 		while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

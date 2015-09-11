@@ -2,8 +2,8 @@
 #include <iostream>
 #include "gl_core_4_4.h"
 #include <glfw3.h>
-#include "glm\glm\glm.hpp"
-#include "glm\glm\ext.hpp"
+#include "glm\glm.hpp"
+#include "glm\ext.hpp"
 
 
 struct RenderObject

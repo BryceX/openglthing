@@ -3,8 +3,8 @@
 #define GLM_SWIZZLE
 #include <math.h>
 #include <glfw3.h>
-#include "glm\glm\glm.hpp"
-#include "glm\glm\ext.hpp"
+#include "glm\glm.hpp"
+#include "glm\ext.hpp"
 
 
 using glm::mat4;
