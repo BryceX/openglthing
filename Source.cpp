@@ -6,11 +6,13 @@
 #include <tiny_obj_loader.h>
 #define GLM_SWIZZLE
 #define STB_IMAGE_IMPLEMENTATION
+#include "Texture.h"
 #include <stb_image.h>
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "Vertex.h"
 #include "Camera.h"
+
 
 using glm::vec3;
 using glm::vec4;
@@ -23,7 +25,7 @@ unsigned int programID;
 
 std::vector<tinyobj::shape_t> shapes;
 std::vector<tinyobj::material_t> materials;
-std::string err = tinyobj::LoadObj(shapes, materials, "./Objs/dragon.obj");
+//std::string err = tinyobj::LoadObj(shapes, materials, "./Objs/dragon.obj");
 
 struct OpenGLInfo
 {
@@ -102,16 +104,24 @@ void GetDeltaTime()
 int main()
 {
 
-
-	
-
-	if (glfwInit() == false)
+	//Application* myApp = new Application();
+	/*if (myApp->Init() == true)
 	{
-		return-1;
+		
+			while (myApp->Update() == true)
+				myApp->Draw();
+				myApp->Shut();
+				
+
 	}
+	delete myApp;
+	return 0;*/
 
-
-
+	// Window Creation Code
+		if (glfwInit() == false)
+		{
+			return-1;
+		}
 
 		GLFWwindow* window = glfwCreateWindow(1280, 720, "test", nullptr, nullptr);
 		if (window == nullptr) {
@@ -129,12 +139,74 @@ int main()
 		printf("GL: %i.%i\n", major, minor);
 
 
-	
-		const char* vsSource = "#version 410\n  in vec4 Position;  in vec4 Colour; out vec4 vColour; uniform mat4 ProjectionView; uniform float time; uniform float heightScale; void main(){vColour = Colour; vec4 P = Position; P.y += cos(time + Position.x)*heightScale; gl_Position = ProjectionView*P; }";
-		
-		
-		
-		char* fsSource = "#version 410\n \in vec4 vColour; \ out vec4 FragColor; \  void main() {FragColor = vColour; FragColor *= vec4(0,.75,.5,1);}";
+
+			//const char* vsSource = "#version 410\n  in vec4 Position;  in vec4 Colour; out vec4 vColour; uniform mat4 ProjectionView; uniform float time; uniform float heightScale; void main(){vColour = Colour; vec4 P = Position; P.y += cos(time + Position.x)*heightScale; gl_Position = ProjectionView*P; }";
+			//char* fsSource = "#version 410\n \in vec4 vColour; \ out vec4 FragColor; \  void main() {FragColor = vColour; FragColor *= vec4(0,.75,.5,1);}";
+
+
+		// Loading a plane
+
+		// Position     TexCoords
+		// X, Y, Z, W,  S,T
+		float vertexData[] = { -5, 0, 5, 1,  0,1,
+							   5, 0, 5, 1,  1,1,
+							   5, 0,-5, 1,  1,0,
+							  -5, 0,-5, 1,  0,0, };
+
+
+		unsigned int indexData[] = { 0,1,2,
+									 0,2,3, };
+
+		unsigned int m_vao;
+		unsigned int m_ibo;
+		unsigned int m_vbo;
+
+		glGenVertexArrays(1, &m_vao);
+		glBindVertexArray(m_vao);
+		glGenBuffers(1, &m_vbo);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4,
+			vertexData, GL_STATIC_DRAW);
+
+		glGenBuffers(1, &m_ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6,
+			indexData, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE,
+			sizeof(float) * 6, 0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+			sizeof(float) * 6, ((char*)0) + 16);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+
+
+		// Shader Creation
+
+		const char* vsSource = "#version 410\n \
+								layout(location=0) in vec4 Position; \
+								layout(location=1) in vec2 TexCoord; \
+								out vec2 vTexCoord; \
+								uniform mat4 ProjectionView;\
+								void main() { \
+								vTexCoord = TexCoord;\
+								gl_Position = ProjectionView * Position; \
+								}";
+
+		const char* fsSource = "#version 410\n \
+								in vec2 vTexCoord; \
+								out vec4 FragColor; \
+								uniform sampler2D diffuse; \
+								void main(){ \
+								FragColor = texture(diffuse,vTexCoord); \
+								}";
+
 		int success = GL_FALSE;
 		//taking memory on gpu for shader stuff
 		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -166,10 +238,10 @@ int main()
 		glDeleteShader(vertexShader);
 
 		Gizmos::create();
-		
-		
-		
-		 
+
+
+
+
 		float time = 0;
 		glClearColor(0.25f, 0.25f, 0.25f, 1);
 		glEnable(GL_DEPTH_TEST);
@@ -186,52 +258,69 @@ int main()
 		const int rows = 12;
 		const int cols = 12;
 
-		//GenerateGrid(rows, cols);
+		//MakeGrid(rows, cols);
+
+		//RenderObject grid = MakeGrid(rows, cols);
+		//createOpenGLBuffers(shapes);
+
+		// Texture Loading
+
 		
-		RenderObject grid = MakeGrid(rows, cols);
-		createOpenGLBuffers(shapes);
+		unsigned int m_texture = LoadTexture("./textures/crate.png");;
 
+		/*Application temp;
+		temp.Init();*/
 
-
+		
 		while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			time = glfwGetTime();
-			
+			//time = glfwGetTime();
+
 			glUseProgram(programID);
-			unsigned int projectionViewUniform = glGetUniformLocation(programID, "ProjectionView"); //hotdog
-			float timehaspassed = glGetUniformLocation(programID, "time");
-			float height = glGetUniformLocation(programID, "heightScale");
 			
-			glUniform1f(timehaspassed, time);
-			glUniform1f(height, 1);
+			//float timehaspassed = glGetUniformLocation(programID, "time");
+			//float height = glGetUniformLocation(programID, "heightScale");
+
+			//glUniform1f(timehaspassed, time);
+			//glUniform1f(height, 1);
+
+
+			//find a way to get these two lines  into init
+			unsigned int projectionViewUniform = glGetUniformLocation(programID, "ProjectionView");
 			glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(planetView.getProjectionView()));
-			
-			//testVert.MakeGrid(rows, cols);
-			
-			glBindVertexArray(grid.VAO);
-			unsigned int indexCount = (rows - 1) * (cols - 1) * 6;
+
+
+
+			//glBindVertexArray(grid.VAO);
+			//unsigned int indexCount = (rows - 1) * (cols - 1) * 6;
 			//glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			
-		
+
+
 
 			planetView.Move(GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, deltaTime);
 			planetView.Zoom();
-			
+
+
+
+			projectionViewUniform = glGetUniformLocation(programID, "diffuse");
+			glUniform1i(projectionViewUniform, 0);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, m_texture);
+			glBindVertexArray(m_vao);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 
 
 
 
-
-
-
-			for (unsigned int i = 0; i < m_gl_info.size(); ++i)
+			/*for (unsigned int i = 0; i < m_gl_info.size(); ++i)
 			{
 				glBindVertexArray(m_gl_info[i].m_VAO);
 				glDrawElements(GL_TRIANGLES, m_gl_info[i].m_index_count, GL_UNSIGNED_INT, 0);
-			}
+			}*/
 
 
 
@@ -263,7 +352,7 @@ int main()
 				Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
 				Gizmos::addLine(vec3(10, 0, -10 + i), vec3(-10, 0, -10 + i), i == 10 ? white : black);
 			}
-			
+
 			mat4 spin = glm::rotate(time /30,vec3(0,1,0));
 
 			Gizmos::addSphere(vec3(),1,24,24,vec4(255,205,0,1),&spin);
@@ -274,11 +363,11 @@ int main()
 
 			Gizmos::addSphere(vec3(), .5, 24, 24, vec4(0, 56, 30, 1), &planet);
 
-		
+
 			mat4 moon = glm::translate(vec3(planet[3].xyz))
-				      * glm::rotate(time/2, vec3(0, .8f, 0))
+					  * glm::rotate(time/2, vec3(0, .8f, 0))
 					 * glm::translate(vec3(3, 0, 0))
-				      * glm::rotate(time, vec3(0, 1, 0));
+					  * glm::rotate(time, vec3(0, 1, 0));
 
 			Gizmos::addSphere(vec3(), .2, 24, 24, vec4(0, 0, 0, 1), &moon);
 
@@ -287,11 +376,11 @@ int main()
 				*glm::translate(vec3(2, 1, 0));
 
 			Gizmos::addSphere(vec3(), .01, 10, 10, vec4(0, 200, 50, 1), &satellite);
-			
-			
+
+
 			Gizmos::draw(planetView.projectionTransform*planetView.getView());*/
 
-			
+
 
 
 
@@ -301,8 +390,8 @@ int main()
 		Gizmos::destroy();
 		glfwTerminate();
 		glfwDestroyWindow(window);
-	
-	return 0;
+
+		return 0;
 	
 
 
