@@ -7,16 +7,20 @@ RenderObject MakeGrid(unsigned int rows, unsigned int columns)
 {
 	RenderObject rObject;	// stores a handle to the VBO, IBO, and the VAO
 
+	// vertex data
 	Vertex* vertices = new Vertex[rows*columns];
 	for (unsigned int r = 0; r < rows; r++)
 	{
 		for (unsigned int c = 0; c < columns; c++)
 		{
-			vertices[r*columns + c].position = glm::vec4((float)c, 0, (float)r, 1);
 			glm::vec3 colour = glm::vec3(sinf((c / (float)(columns - 1))*(r / (float)(rows - 1))));
+
+			vertices[r*columns + c].position = glm::vec4((float)c, 0, (float)r, 1);
 			vertices[r * columns + c].colour = glm::vec4(colour, 1);
 		}
 	}
+
+	// index data
 	unsigned int* auiIndices = new unsigned int[(rows - 1)*(columns - 1) * 6];
 	unsigned int index = 0;
 

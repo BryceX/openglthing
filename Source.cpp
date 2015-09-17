@@ -5,13 +5,14 @@
 #include <math.h>
 #include <tiny_obj_loader.h>
 #define GLM_SWIZZLE
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
 #include "Texture.h"
 #include <stb_image.h>
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "Vertex.h"
 #include "Camera.h"
+#include "FBXFile.h"
 
 
 using glm::vec3;
@@ -25,6 +26,11 @@ unsigned int programID;
 
 std::vector<tinyobj::shape_t> shapes;
 std::vector<tinyobj::material_t> materials;
+
+
+
+
+
 //std::string err = tinyobj::LoadObj(shapes, materials, "./Objs/dragon.obj");
 
 struct OpenGLInfo
@@ -94,6 +100,7 @@ void MakeView(GLFWwindow* a, double deltaTime)
 	float speed = 1;
 }
 
+
 void GetDeltaTime()
 {
 	deltaTime = glfwGetTime();
@@ -111,7 +118,8 @@ int main()
 			while (myApp->Update() == true)
 				myApp->Draw();
 				myApp->Shut();
-				
+				
+
 
 	}
 	delete myApp;
@@ -122,6 +130,9 @@ int main()
 		{
 			return-1;
 		}
+
+		
+
 
 		GLFWwindow* window = glfwCreateWindow(1280, 720, "test", nullptr, nullptr);
 		if (window == nullptr) {
@@ -253,7 +264,7 @@ int main()
 		planetView.setPosition(vec3(10, 10, 10));
 		GetDeltaTime();
 
-
+		
 
 		const int rows = 12;
 		const int cols = 12;
@@ -267,6 +278,11 @@ int main()
 
 		
 		unsigned int m_texture = LoadTexture("./textures/crate.png");;
+		
+		FBXFile temp;
+		temp.load("./FBX/soulspear/soulspear.fbx", FBXFile::UNITS_CENTIMETER);
+		FBXMeshNode * mesh = temp.getMeshByIndex(0);
+		MakeGrid(5, 5);
 
 		/*Application temp;
 		temp.Init();*/

@@ -6,7 +6,7 @@
 unsigned int LoadTexture(const char* fileName)
 {
 	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	unsigned char* data = stbi_load("./textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
+	unsigned char* data = stbi_load(fileName, &imageWidth, &imageHeight, &imageFormat, STBI_default);
 	unsigned int m_texture;
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
