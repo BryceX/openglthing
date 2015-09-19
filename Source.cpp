@@ -12,7 +12,7 @@
 #include "glm/ext.hpp"
 #include "Vertex.h"
 #include "Camera.h"
-#include "FBXFile.h"
+
 
 
 using glm::vec3;
@@ -108,22 +108,15 @@ void GetDeltaTime()
 
 }
 
+
+
+
 int main()
 {
 
-	//Application* myApp = new Application();
-	/*if (myApp->Init() == true)
-	{
-		
-			while (myApp->Update() == true)
-				myApp->Draw();
-				myApp->Shut();
-				
-
-
-	}
-	delete myApp;
-	return 0;*/
+	const int rows = 12;
+	const int cols = 12;
+	
 
 	// Window Creation Code
 		if (glfwInit() == false)
@@ -200,7 +193,7 @@ int main()
 
 		// Shader Creation
 
-		const char* vsSource = "#version 410\n \
+		/*const char* vsSource = "#version 410\n \
 								layout(location=0) in vec4 Position; \
 								layout(location=1) in vec2 TexCoord; \
 								out vec2 vTexCoord; \
@@ -218,7 +211,7 @@ int main()
 								FragColor = texture(diffuse,vTexCoord); \
 								}";
 
-		int success = GL_FALSE;
+		
 		//taking memory on gpu for shader stuff
 		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -228,25 +221,57 @@ int main()
 		glShaderSource(fragmentShader, 1, (const char**)&fsSource, 0);
 		glCompileShader(fragmentShader);
 		programID = glCreateProgram();
+
+
+
+
+
 		//attaching shader onto program
 		glAttachShader(programID, vertexShader);
 		glAttachShader(programID, fragmentShader);
 		glLinkProgram(programID);
 		glGetProgramiv(programID, GL_LINK_STATUS, &success);
+		*/
 
-		if (success == GL_FALSE)
-		{
-			int infoLogLength = 0;
-			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
-			char* infoLog = new char[infoLogLength];
-			glGetProgramInfoLog(programID, infoLogLength, 0, infoLog);
-			printf("Error: Failed to link shader program!\n");
-			printf("%s\n", infoLog);
-			delete[] infoLog;
-		}
+		//programID = loadShader("vertexpath", "fragmentpath");
 
-		glDeleteShader(fragmentShader);
+		unsigned int m_texture = LoadTexture("./FBX/white.png");
+		RenderObject myFBX;
+		unsigned int fbxShaderProg = loadShader("testvert.txt", "testfrag.txt");
+		myFBX = LoadFBX("./FBX/stanford/bunny.fbx");
+		CreateOpenGLBuffers(myFBX.m_FBX);
+		/*
+		RenderObject myFBX2;
+		myFBX2 = LoadFBX("./FBX/stanford/Bunny.fbx");
+
+		const char* vsSource2 = "#version 410\n\
+								layout(location=0) in vec4 Position;\
+								layout(location = 1) in vec4 Normal;\
+								out vec4 Normal;\
+								uniform mat4 ProjectionView;\
+								void main()\
+								{vNormal = Normal;\
+								gl_Position = ProjectionView * Position;}";
+
+		const char* fsSource2 = "#version 410\n\
+								in vec4 vNormal;\
+								out vec4 FragColor;\
+								float d = max(0,dot(normalize(vNormal.xyz),\
+								vec3(0,1,0)));\
+								void main(){FragColor = vec4(d,d,d,1);}";
+		
+		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertexShader, 1, (const char**)&vsSource2, 0);
+		glCompileShader(vertexShader);
+		unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragmentShader, 1, (const char**)&fsSource2, 0);
+		glCompileShader(fragmentShader);
+		programID = glCreateProgram();
+		glAttachShader(programID, vertexShader);
+		glAttachShader(programID, fragmentShader);
+		glLinkProgram(programID);
 		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);*/
 
 		Gizmos::create();
 
@@ -262,38 +287,19 @@ int main()
 		planetView.setPerspective(glm::pi<float>()*0.25f, 1280 / 720.f, 0.1f, 1000.f);
 		planetView.setLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
 		planetView.setPosition(vec3(10, 10, 10));
-		GetDeltaTime();
-
 		
 
-		const int rows = 12;
-		const int cols = 12;
-
-		//MakeGrid(rows, cols);
-
-		//RenderObject grid = MakeGrid(rows, cols);
-		//createOpenGLBuffers(shapes);
-
-		// Texture Loading
-
-		
-		unsigned int m_texture = LoadTexture("./textures/crate.png");;
-		
-		FBXFile temp;
-		temp.load("./FBX/soulspear/soulspear.fbx", FBXFile::UNITS_CENTIMETER);
-		FBXMeshNode * mesh = temp.getMeshByIndex(0);
-		MakeGrid(5, 5);
-
-		/*Application temp;
-		temp.Init();*/
+	
 
 		
 		while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 		{
+			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			GetDeltaTime();
 			//time = glfwGetTime();
 
-			glUseProgram(programID);
+			glUseProgram(fbxShaderProg);
 			
 			//float timehaspassed = glGetUniformLocation(programID, "time");
 			//float height = glGetUniformLocation(programID, "heightScale");
@@ -303,7 +309,7 @@ int main()
 
 
 			//find a way to get these two lines  into init
-			unsigned int projectionViewUniform = glGetUniformLocation(programID, "ProjectionView");
+			unsigned int projectionViewUniform = glGetUniformLocation(fbxShaderProg, "ProjectionView");
 			glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(planetView.getProjectionView()));
 
 
@@ -320,15 +326,23 @@ int main()
 
 
 
-			projectionViewUniform = glGetUniformLocation(programID, "diffuse");
+			projectionViewUniform = glGetUniformLocation(fbxShaderProg, "diffuse");
 			glUniform1i(projectionViewUniform, 0);
 
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, m_texture);
 			glBindVertexArray(m_vao);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-
+			//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+			for (unsigned int i = 0; i < myFBX.m_FBX->getMeshCount(); ++i) {
+				FBXMeshNode* mesh = myFBX.m_FBX->getMeshByIndex(i);
+				unsigned int* glData = (unsigned int*)mesh->m_userData;
+				glBindVertexArray(glData[0]);
+				glDrawElements(GL_TRIANGLES,
+					(unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
+			}
+			myFBX.Draw();
+			
+			//myFBX2.Draw();
 
 
 

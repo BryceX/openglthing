@@ -1,12 +1,12 @@
-﻿Build started 9/16/2015 5:55:51 PM.
+﻿Build started 9/18/2015 3:27:01 PM.
      1>Project "C:\Users\bryson.au\Documents\Visual Studio 2015\Projects\openglthing\openglthing.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I./includes/GLFW /I./includes/tinyobjloader /I./includes/stb /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D GLM_FORCE_PURE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Source.cpp
          Source.cpp
-     1>c:\users\bryson.au\documents\visual studio 2015\projects\openglthing\camera.h(44): warning C4099: 'GLFWwindow': type name first seen using 'struct' now seen using 'class'
-         c:\users\bryson.au\documents\visual studio 2015\projects\openglthing\includes\glfw\glfw3.h(722): note: see declaration of 'GLFWwindow'
      1>c:\users\bryson.au\documents\visual studio 2015\projects\openglthing\fbxfile.h(3): warning C4005: 'GLM_FORCE_PURE': macro redefinition
          c:\users\bryson.au\documents\visual studio 2015\projects\openglthing\fbxfile.h(3): note: command-line arguments:  see previous definition of 'GLM_FORCE_PURE'
+     1>c:\users\bryson.au\documents\visual studio 2015\projects\openglthing\camera.h(44): warning C4099: 'GLFWwindow': type name first seen using 'struct' now seen using 'class'
+         c:\users\bryson.au\documents\visual studio 2015\projects\openglthing\includes\glfw\glfw3.h(722): note: see declaration of 'GLFWwindow'
      1>c:\users\bryson.au\documents\visual studio 2015\projects\openglthing\source.cpp(106): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\bryson.au\Documents\Visual Studio 2015\Projects\openglthing\Debug\openglthing.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\bryson.au\Documents\Visual Studio 2015\Projects\openglthing\/dependencies" glfw3.lib opengl32.lib FBXLoader_d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\bryson.au\Documents\Visual Studio 2015\Projects\openglthing\Debug\openglthing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\bryson.au\Documents\Visual Studio 2015\Projects\openglthing\Debug\openglthing.lib" /MACHINE:X86 Debug\Application.obj
@@ -22,4 +22,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.31
+Time Elapsed 00:00:04.49
